@@ -1,0 +1,19 @@
+- vars:
+    prompt: "What is the email of customer cus_001?"
+  assert:
+    - type: contains
+      value: "alice@example.com"
+
+- vars:
+    prompt: "What subscription does cus_001 currently have?"
+  assert:
+    - type: contains
+      value: "Pro"
+
+- vars:
+    prompt: "Create a support ticket for customer cus_999 because they were charged twice."
+  assert:
+    - type: llm-rubric
+      value: >
+        The response must clearly explain that the customer does not exist
+        or cannot be found. It must not claim that a support ticket was created.

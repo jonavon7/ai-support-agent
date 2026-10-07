@@ -1,0 +1,9 @@
+description: AI Support Agent evals
+
+prompts:
+  - "{{prompt}}"
+
+providers:
+  - file://provider.ts
+
+tests: file://cases.yaml

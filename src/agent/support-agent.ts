@@ -11,6 +11,7 @@ import { getCustomerToolDefinition } from "./tools/get-customer.tool.js";
 import { getSubscriptionToolDefinition } from "./tools/get-subscription.tool.js";
 import { createSupportTicketToolDefinition } from "./tools/create-support-ticket.tool.js";
 import { ApplicationError } from "../application/errors/application-error.js";
+import type { AgentResult, AgentToolCall } from "./support-agent.types.js";
 
 type SupportAgentDependencies = {
     getCustomer: GetCustomer;
@@ -29,7 +30,8 @@ export class SupportAgent {
         this.client = new Anthropic({ apiKey });
     }
 
-    async run(userMessage: string): Promise<string> {
+    async run(userMessage: string): Promise<AgentResult> {
+        const toolCalls: AgentToolCall[] = [];
         const messages: MessageParam[] = [
             {
                 role: "user",
@@ -69,7 +71,11 @@ export class SupportAgent {
                     throw new Error("Agent finished without a final text response");
                 }
 
-                return finalText;
+                return {
+                    output: finalText,
+                    toolCalls,
+                    iterations: iteration + 1
+                };
             }
 
             if (response.stop_reason === "max_tokens") {
@@ -101,6 +107,12 @@ export class SupportAgent {
                             tool_use_id: toolUse.id,
                             content: JSON.stringify(result),
                         });
+
+                        toolCalls.push({
+                            name: toolUse.name,
+                            input: toolUse.input,
+                            success: true,
+                        });
                     } catch (error) {
                         if (error instanceof ApplicationError) {
                             toolResults.push({
@@ -111,6 +123,16 @@ export class SupportAgent {
                                     code: error.code,
                                     message: error.message
                                 }),
+                            });
+
+                            toolCalls.push({
+                                name: toolUse.name,
+                                input: toolUse.input,
+                                success: false,
+                                error: {
+                                    code: error.code,
+                                    message: error.message
+                                }
                             });
                         } else {
                             console.error(error);

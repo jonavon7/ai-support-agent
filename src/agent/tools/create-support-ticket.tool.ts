@@ -1,10 +1,14 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import type { CreateSupportTicket } from "../../application/create-support-ticket.js";
-import type { CreateSupportTicketData } from "../../application/support-ticket.repository.js";
+
+type CreateSupportTicketToolInput = {
+    customerId: string;
+    reason: string;
+};
 
 export const createSupportTicketToolDefinition: Anthropic.Tool = {
     name: "create_support_ticket",
-    description: "Create a new support ticket for a customer",
+    description: "Create a support ticket when a customer needs an issue escalated or requires support that cannot be resolved directly.",
     input_schema: {
         type: "object",
         properties: {
@@ -21,7 +25,7 @@ export const createSupportTicketToolDefinition: Anthropic.Tool = {
     },
 }
 
-function isCreateSupportTicketInput(input: unknown): input is CreateSupportTicketData {
+function isCreateSupportTicketInput(input: unknown): input is CreateSupportTicketToolInput {
     if (typeof input !== "object" || input === null) {
         return false;
     }

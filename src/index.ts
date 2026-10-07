@@ -38,7 +38,7 @@ const agent = new SupportAgent(
 );
 
 const response = await agent.run(
-    "Who is cus_001 and what subscription do they have?",
+    "Create a support ticket for customer cus_999 because they were charged twice.",
 );
 
 console.log(response);

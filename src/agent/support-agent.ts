@@ -10,6 +10,7 @@ import { executeTool } from "./dispatcher/execute-tool.js";
 import { getCustomerToolDefinition } from "./tools/get-customer.tool.js";
 import { getSubscriptionToolDefinition } from "./tools/get-subscription.tool.js";
 import { createSupportTicketToolDefinition } from "./tools/create-support-ticket.tool.js";
+import { ApplicationError } from "../application/errors/application-error.js";
 
 type SupportAgentDependencies = {
     getCustomer: GetCustomer;
@@ -96,21 +97,26 @@ export class SupportAgent {
                         );
 
                         toolResults.push({
-                            type: "tool_result" as const,
+                            type: "tool_result",
                             tool_use_id: toolUse.id,
                             content: JSON.stringify(result),
                         });
                     } catch (error) {
-                        const message = error instanceof Error
-                            ? error.message
-                            : "Unknown tool execution error";
+                        if (error instanceof ApplicationError) {
+                            toolResults.push({
+                                type: "tool_result",
+                                tool_use_id: toolUse.id,
+                                is_error: true,
+                                content: JSON.stringify({
+                                    code: error.code,
+                                    message: error.message
+                                }),
+                            });
+                        } else {
+                            console.error(error);
+                            throw new Error("Unexpected tool execution failure");
+                        }
 
-                        toolResults.push({
-                            type: "tool_result" as const,
-                            tool_use_id: toolUse.id,
-                            is_error: true,
-                            content: message,
-                        });
                     }
                 }
 

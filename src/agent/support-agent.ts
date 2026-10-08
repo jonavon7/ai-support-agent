@@ -112,6 +112,7 @@ export class SupportAgent {
                             name: toolUse.name,
                             input: toolUse.input,
                             success: true,
+                            result,
                         });
                     } catch (error) {
                         if (error instanceof ApplicationError) {

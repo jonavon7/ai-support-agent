@@ -2,6 +2,7 @@ export type AgentToolCall = {
     name: string;
     input: unknown;
     success: boolean;
+    result?: unknown;
     error?: {
         code: string;
         message: string;

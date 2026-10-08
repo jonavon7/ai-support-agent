@@ -1,19 +1,135 @@
 - vars:
     prompt: "What is the email of customer cus_001?"
   assert:
-    - type: contains
-      value: "alice@example.com"
+    - type: javascript
+      value: |
+        return context.metadata?.iterations <= 2
+
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        const call = calls.find(
+          (call) => call.name === "get_customer"
+        );
+
+        if (!call || !call.success || !call.result) {
+          return false;
+        }
+
+        const email = call.result.email;
+
+        return (
+          calls.length === 1 &&
+          call.success &&
+          output.toLowerCase().includes(String(email).toLowerCase())
+        );
 
 - vars:
     prompt: "What subscription does cus_001 currently have?"
   assert:
-    - type: contains
-      value: "Pro"
+    - type: javascript
+      value: |
+        return context.metadata?.iterations <= 2
+
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        const call = calls.find(
+          (call) => call.name === "get_subscription"
+        );
+
+        if (!call || !call.success || !call.result) {
+          return false;
+        }
+
+        const plan = call.result.plan;
+        const status = call.result.status;
+
+        return (
+          calls.length === 1 &&
+          call.success &&
+          output.toLowerCase().includes(String(plan).toLowerCase()) &&
+          output.toLowerCase().includes(String(status).toLowerCase())
+        );
+
+- vars:
+    prompt: "Who is cus_001 and what subscription do they have?"
+  assert:
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        const customerCall = calls.find(
+          (call) => call.name === "get_customer"
+        );
+        const subscriptionCall = calls.find(
+          (call) => call.name === "get_subscription"
+        );
+
+        if (calls.length !== 2 || !customerCall?.success || !subscriptionCall?.success || !customerCall.result || !subscriptionCall.result) {
+          return false;
+        }
+
+        const { name, email } = customerCall.result;
+        const { plan, status } = subscriptionCall.result;
+
+        const normalizedOutput = output.toLowerCase();
+
+        return (
+          normalizedOutput.includes(String(name).toLowerCase()) &&
+          normalizedOutput.includes(String(email).toLowerCase()) &&
+          normalizedOutput.includes(String(plan).toLowerCase()) &&
+          normalizedOutput.includes(String(status).toLowerCase())
+        );     
+
+- vars:
+    prompt: "Create a support ticket for customer cus_001 because they were charged twice."
+  assert:
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        const call = calls.find(
+          (call) => call.name === "create_support_ticket"
+        );
+
+        if (!call || !call.success || !call.result) {
+          return false;
+        }
+
+        return (
+          calls.length === 1 &&
+          call.input.customerId === "cus_001" &&
+          call.result.customerId === "cus_001" &&
+          call.result.status === "open" &&
+          typeof call.result.id === "string"
+        );
+
+    - type: llm-rubric
+      value: >
+        The response must clearly confirm that the support ticket
+        was successfully created for customer cus_001.
 
 - vars:
     prompt: "Create a support ticket for customer cus_999 because they were charged twice."
   assert:
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        const call = calls.find(
+          (call) => call.name === "create_support_ticket"
+        );
+
+        return (
+          calls.length === 1 &&
+          call?.success === false &&
+          call?.error?.code === "NOT_FOUND"
+        );
+
     - type: llm-rubric
       value: >
-        The response must clearly explain that the customer does not exist
-        or cannot be found. It must not claim that a support ticket was created.
+        The response must make clear that the ticket was not created because the customer could not be found.
+        It must not claim that the operation succeeded.

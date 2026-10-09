@@ -6,6 +6,7 @@ import { GetCustomer } from "./application/get-customer.js";
 import { InMemoryCustomerRepository } from "./infrastructure/repositories/in-memory-customer.repository.js";
 import { CreateSupportTicket } from "./application/create-support-ticket.js";
 import { InMemorySupportTicketRepository } from "./infrastructure/repositories/in-memory-support-ticket.repository.js";
+import { CancelSubscription } from "./application/cancel-subscription.js";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -27,18 +28,29 @@ const createSupportTicket = new CreateSupportTicket(
     customerRepository,
     supportTicketRepository,
 )
+const cancelSubscription = new CancelSubscription(
+    subscriptionRepository
+);
 
 const agent = new SupportAgent(
     {
         getCustomer,
         getSubscription,
         createSupportTicket,
+        cancelSubscription,
     },
     apiKey,
 );
 
-const response = await agent.run(
-    "Create a support ticket for customer cus_999 because they were charged twice.",
-);
+const first = await agent.run({
+    message: "Cancel the subscription for cus_001",
+});
 
-console.log(response);
+console.dir(first, { depth: null });
+
+const second = await agent.run({
+    message: "CONFIRM",
+    state: first.state,
+});
+
+console.dir(second, { depth: null });

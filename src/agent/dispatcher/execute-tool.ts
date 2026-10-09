@@ -4,6 +4,7 @@ import type { GetSubscription } from "../../application/get-subscription.js";
 import { executeCreateSupportTicketTool } from "../tools/create-support-ticket.tool.js";
 import { executeGetCustomerTool } from "../tools/get-customer.tool.js";
 import { executeGetSubscriptionTool } from "../tools/get-subscription.tool.js";
+import { executeRequestCancelSubscriptionTool } from "../tools/request-cancel-subscription.tool.js";
 
 type Dependencies = {
     getCustomer: GetCustomer;
@@ -34,6 +35,9 @@ export async function executeTool(
                 input,
                 dependencies.createSupportTicket
             );
+
+        case "request_cancel_subscription":
+            return executeRequestCancelSubscriptionTool(input);
 
         default:
             throw new Error(`Unknown tool: ${name}`);

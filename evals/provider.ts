@@ -6,6 +6,7 @@ import { CreateSupportTicket } from "../src/application/create-support-ticket.js
 import { InMemoryCustomerRepository } from "../src/infrastructure/repositories/in-memory-customer.repository.js";
 import { InMemorySubscriptionRepository } from "../src/infrastructure/repositories/in-memory-subscription.repository.js";
 import { InMemorySupportTicketRepository } from "../src/infrastructure/repositories/in-memory-support-ticket.repository.js";
+import { CancelSubscription } from "../src/application/cancel-subscription.js";
 
 export default class SupportAgentProvider implements ApiProvider {
     id(): string {
@@ -35,17 +36,21 @@ export default class SupportAgentProvider implements ApiProvider {
             customerRepository,
             supportTicketRepository,
         );
+        const cancelSubscription = new CancelSubscription(
+            subscriptionRepository
+        );
 
         const agent = new SupportAgent(
             {
                 getCustomer,
                 getSubscription,
                 createSupportTicket,
+                cancelSubscription,
             },
             apiKey,
         );
 
-        const result = await agent.run(prompt);
+        const result = await agent.run({ message: prompt });
 
         return {
             output: result.output,

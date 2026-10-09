@@ -15,7 +15,7 @@ const customers: Customer[] = [
 ];
 
 export class InMemoryCustomerRepository implements CustomerRepository {
-    async findById(customerId: string): Promise<Customer | null> {
+    findById(customerId: string): Promise<Customer | null> {
         return Promise.resolve(customers.find((customer) => customer.id === customerId) ?? null);
     }
 }

@@ -1,3 +1,4 @@
+import { normalizeCustomerId } from "./shared/normalize-customer-id.js";
 import type { SubscriptionRepository } from "./subscription.repository.js";
 
 export type GetSubscriptionInput = {
@@ -5,9 +6,11 @@ export type GetSubscriptionInput = {
 };
 
 export class GetSubscription {
-    constructor(private subscriptionRepository: SubscriptionRepository) { }
+    constructor(private readonly subscriptionRepository: SubscriptionRepository) { }
 
     async execute({ customerId }: GetSubscriptionInput) {
-        return this.subscriptionRepository.findByCustomerId(customerId);
+        const normalizedCustomerId = normalizeCustomerId(customerId);
+
+        return this.subscriptionRepository.findByCustomerId(normalizedCustomerId);
     }
 }

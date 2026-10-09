@@ -2,6 +2,7 @@ import type { SupportTicket } from "../domain/support-ticket.js";
 import type { CustomerRepository } from "./customer.repository.js";
 import { NotFoundError } from "./errors/not-found.error.js";
 import { ValidationError } from "./errors/validation.error.js";
+import { normalizeCustomerId } from "./shared/normalize-customer-id.js";
 import type { SupportTicketRepository } from "./support-ticket.repository.js";
 
 type CreateSupportTicketInput = {
@@ -16,19 +17,19 @@ export class CreateSupportTicket {
     ) { }
 
     async execute(input: CreateSupportTicketInput): Promise<SupportTicket> {
-        const customerId = input.customerId.trim();
+        const normalizedCustomerId = normalizeCustomerId(input.customerId);
         const reason = input.reason.trim();
 
-        if (!customerId || !reason) {
-            throw new ValidationError("Customer ID and ticket reason must not be empty");
+        if (!reason) {
+            throw new ValidationError("Ticket reason must not be empty");
         }
 
-        const customer = await this.customerRepository.findById(customerId);
+        const customer = await this.customerRepository.findById(normalizedCustomerId);
 
         if (!customer) {
-            throw new NotFoundError(`Customer not found: ${customerId}`);
+            throw new NotFoundError(`Customer not found: ${normalizedCustomerId}`);
         }
 
-        return this.supportTicketRepository.create({ customerId, reason });
+        return this.supportTicketRepository.create({ customerId: normalizedCustomerId, reason });
     }
 }

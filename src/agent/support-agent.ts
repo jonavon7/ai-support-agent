@@ -1,6 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type {
-    MessageParam,
     ToolResultBlockParam,
 } from "@anthropic-ai/sdk/resources/messages/messages";
 import type { GetCustomer } from "../application/get-customer.js";
@@ -11,12 +10,17 @@ import { getCustomerToolDefinition } from "./tools/get-customer.tool.js";
 import { getSubscriptionToolDefinition } from "./tools/get-subscription.tool.js";
 import { createSupportTicketToolDefinition } from "./tools/create-support-ticket.tool.js";
 import { ApplicationError } from "../application/errors/application-error.js";
-import type { AgentResult, AgentToolCall } from "./support-agent.types.js";
+import type { AgentInput, AgentResult, AgentState, AgentToolCall, PendingAction } from "./support-agent.types.js";
+import { isRequestCancelSubscriptionResult, requestCancelSubscriptionToolDefinition } from "./tools/request-cancel-subscription.tool.js";
+import type { CancelSubscription } from "../application/cancel-subscription.js";
+import { DomainError } from "../domain/errors/domain-error.js";
+import type { Subscription } from "../domain/subscription.js";
 
 type SupportAgentDependencies = {
     getCustomer: GetCustomer;
     getSubscription: GetSubscription;
     createSupportTicket: CreateSupportTicket;
+    cancelSubscription: CancelSubscription;
 };
 
 export class SupportAgent {
@@ -30,14 +34,120 @@ export class SupportAgent {
         this.client = new Anthropic({ apiKey });
     }
 
-    async run(userMessage: string): Promise<AgentResult> {
+    private async executePendingAction(action: PendingAction): Promise<Subscription> {
+        switch (action.type) {
+            case "cancel_subscription":
+                return this.dependencies.cancelSubscription.execute({
+                    customerId: action.customerId,
+                });
+
+            case "refund_payment":
+                throw new Error("Refund payment action is not implemented yet");
+
+            default:
+                const _exhaustiveCheck: never = action;
+                throw new Error(
+                    `Unsupported pending action: ${JSON.stringify(_exhaustiveCheck)}`,
+                );
+        }
+    }
+
+    async run(input: AgentInput): Promise<AgentResult> {
         const toolCalls: AgentToolCall[] = [];
-        const messages: MessageParam[] = [
-            {
-                role: "user",
-                content: userMessage,
-            },
-        ];
+        const agentState: AgentState = input.state
+            ? {
+                ...input.state,
+                messages: [
+                    ...input.state.messages,
+                    {
+                        role: "user",
+                        content: input.message,
+                    },
+                ],
+            }
+            : {
+                messages: [
+                    {
+                        role: "user",
+                        content: input.message,
+                    },
+                ],
+            };
+
+        const messages = agentState.messages;
+
+        if (agentState.pendingAction) {
+            const command = input.message.trim().toUpperCase();
+            let output: string;
+
+            switch (command) {
+                case "CONFIRM": {
+                    try {
+                        const action = agentState.pendingAction;
+                        const result = await this.executePendingAction(action);
+                        delete agentState.pendingAction;
+                        output = `Subscription for ${result.customerId} was cancelled successfully.`;
+                        messages.push({
+                            role: "assistant",
+                            content: output,
+                        });
+                        return {
+                            output,
+                            toolCalls,
+                            iterations: 0,
+                            state: agentState,
+                        };
+                    } catch (error) {
+                        if (error instanceof ApplicationError ||
+                            error instanceof DomainError) {
+                            delete agentState.pendingAction;
+                            output = error.message;
+                            messages.push({
+                                role: "assistant",
+                                content: output,
+                            });
+                            return {
+                                output,
+                                toolCalls,
+                                iterations: 0,
+                                state: agentState,
+                            };
+                        }
+                        console.error(error);
+                        throw new Error(
+                            "Unexpected pending action execution failure",
+                        );
+                    }
+                }
+                case "CANCEL": {
+                    delete agentState.pendingAction;
+                    output = "Subscription cancellation request has been cancelled.";
+                    messages.push({
+                        role: "assistant",
+                        content: output,
+                    });
+                    return {
+                        output,
+                        toolCalls,
+                        iterations: 0,
+                        state: agentState,
+                    };
+                }
+                default: {
+                    output = "A subscription cancellation is pending. Reply CONFIRM to proceed or CANCEL to discard it.";
+                    messages.push({
+                        role: "assistant",
+                        content: output,
+                    });
+                    return {
+                        output,
+                        toolCalls,
+                        iterations: 0,
+                        state: agentState,
+                    };
+                }
+            }
+        }
 
         for (let iteration = 0; iteration < SupportAgent.MAX_ITERATIONS; iteration++) {
             const response = await this.client.messages.create({
@@ -46,7 +156,8 @@ export class SupportAgent {
                 tools: [
                     getCustomerToolDefinition,
                     getSubscriptionToolDefinition,
-                    createSupportTicketToolDefinition
+                    createSupportTicketToolDefinition,
+                    requestCancelSubscriptionToolDefinition,
                 ],
                 messages,
             });
@@ -74,7 +185,8 @@ export class SupportAgent {
                 return {
                     output: finalText,
                     toolCalls,
-                    iterations: iteration + 1
+                    iterations: iteration + 1,
+                    state: agentState,
                 };
             }
 
@@ -102,6 +214,10 @@ export class SupportAgent {
                             this.dependencies,
                         );
 
+                        if (isRequestCancelSubscriptionResult(result)) {
+                            agentState.pendingAction = result.action;
+                        }
+
                         toolResults.push({
                             type: "tool_result",
                             tool_use_id: toolUse.id,
@@ -115,7 +231,9 @@ export class SupportAgent {
                             result,
                         });
                     } catch (error) {
-                        if (error instanceof ApplicationError) {
+                        if (error instanceof ApplicationError ||
+                            error instanceof DomainError
+                        ) {
                             toolResults.push({
                                 type: "tool_result",
                                 tool_use_id: toolUse.id,

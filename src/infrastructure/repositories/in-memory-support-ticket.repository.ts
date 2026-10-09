@@ -5,7 +5,7 @@ import type { SupportTicket } from "../../domain/support-ticket.js";
 const supportTickets: SupportTicket[] = [];
 
 export class InMemorySupportTicketRepository implements SupportTicketRepository {
-    async create(data: CreateSupportTicketData): Promise<SupportTicket> {
+    create(data: CreateSupportTicketData): Promise<SupportTicket> {
         const st: SupportTicket = {
             id: randomUUID(),
             customerId: data.customerId,

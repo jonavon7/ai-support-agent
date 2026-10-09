@@ -7,6 +7,7 @@ import { InMemoryCustomerRepository } from "./infrastructure/repositories/in-mem
 import { CreateSupportTicket } from "./application/create-support-ticket.js";
 import { InMemorySupportTicketRepository } from "./infrastructure/repositories/in-memory-support-ticket.repository.js";
 import { CancelSubscription } from "./application/cancel-subscription.js";
+import { PrepareSubscriptionCancellation } from "./application/prepare-subscription-cancellation.js";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -31,6 +32,9 @@ const createSupportTicket = new CreateSupportTicket(
 const cancelSubscription = new CancelSubscription(
     subscriptionRepository
 );
+const prepareSubscriptionCancellation = new PrepareSubscriptionCancellation(
+    subscriptionRepository
+);
 
 const agent = new SupportAgent(
     {
@@ -38,6 +42,7 @@ const agent = new SupportAgent(
         getSubscription,
         createSupportTicket,
         cancelSubscription,
+        prepareSubscriptionCancellation,
     },
     apiKey,
 );

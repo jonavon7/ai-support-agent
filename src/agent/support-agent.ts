@@ -15,13 +15,22 @@ import { isRequestCancelSubscriptionResult, requestCancelSubscriptionToolDefinit
 import type { CancelSubscription } from "../application/cancel-subscription.js";
 import { DomainError } from "../domain/errors/domain-error.js";
 import type { Subscription } from "../domain/subscription.js";
+import type { PrepareSubscriptionCancellation } from "../application/prepare-subscription-cancellation.js";
 
 type SupportAgentDependencies = {
     getCustomer: GetCustomer;
     getSubscription: GetSubscription;
     createSupportTicket: CreateSupportTicket;
     cancelSubscription: CancelSubscription;
+    prepareSubscriptionCancellation: PrepareSubscriptionCancellation;
 };
+
+function isExpectedError(error: unknown): error is ApplicationError | DomainError {
+    return (
+        error instanceof ApplicationError ||
+        error instanceof DomainError
+    );
+}
 
 export class SupportAgent {
     private readonly client: Anthropic;
@@ -40,16 +49,21 @@ export class SupportAgent {
                 return this.dependencies.cancelSubscription.execute({
                     customerId: action.customerId,
                 });
-
-            case "refund_payment":
-                throw new Error("Refund payment action is not implemented yet");
-
-            default:
-                const _exhaustiveCheck: never = action;
-                throw new Error(
-                    `Unsupported pending action: ${JSON.stringify(_exhaustiveCheck)}`,
-                );
         }
+    }
+
+    private createDeterministicResult(output: string, state: AgentState, toolCalls: AgentToolCall[]): AgentResult {
+        state.messages.push({
+            role: "assistant",
+            content: output,
+        });
+
+        return {
+            output,
+            toolCalls,
+            iterations: 0,
+            state,
+        };
     }
 
     async run(input: AgentInput): Promise<AgentResult> {
@@ -78,73 +92,50 @@ export class SupportAgent {
 
         if (agentState.pendingAction) {
             const command = input.message.trim().toUpperCase();
-            let output: string;
-
             switch (command) {
                 case "CONFIRM": {
                     try {
                         const action = agentState.pendingAction;
                         const result = await this.executePendingAction(action);
                         delete agentState.pendingAction;
-                        output = `Subscription for ${result.customerId} was cancelled successfully.`;
-                        messages.push({
-                            role: "assistant",
-                            content: output,
-                        });
-                        return {
-                            output,
+                        return this.createDeterministicResult(
+                            `Subscription for ${result.customerId} was cancelled successfully.`,
+                            agentState,
                             toolCalls,
-                            iterations: 0,
-                            state: agentState,
-                        };
+                        );
                     } catch (error) {
-                        if (error instanceof ApplicationError ||
-                            error instanceof DomainError) {
+                        if (isExpectedError(error)) {
                             delete agentState.pendingAction;
-                            output = error.message;
-                            messages.push({
-                                role: "assistant",
-                                content: output,
-                            });
-                            return {
-                                output,
+                            return this.createDeterministicResult(
+                                error.message,
+                                agentState,
                                 toolCalls,
-                                iterations: 0,
-                                state: agentState,
-                            };
+                            );
+
                         }
                         console.error(error);
                         throw new Error(
                             "Unexpected pending action execution failure",
+                            { cause: error }
                         );
                     }
                 }
                 case "CANCEL": {
                     delete agentState.pendingAction;
-                    output = "Subscription cancellation request has been cancelled.";
-                    messages.push({
-                        role: "assistant",
-                        content: output,
-                    });
-                    return {
-                        output,
+                    return this.createDeterministicResult(
+                        "Subscription cancellation request has been cancelled.",
+                        agentState,
                         toolCalls,
-                        iterations: 0,
-                        state: agentState,
-                    };
+                    );
+
                 }
                 default: {
-                    output = "A subscription cancellation is pending. Reply CONFIRM to proceed or CANCEL to discard it.";
-                    messages.push({
-                        role: "assistant",
-                        content: output,
-                    });
-                    return {
-                        output,
+                    return this.createDeterministicResult(
+                        "A subscription cancellation is pending. Reply CONFIRM to proceed or CANCEL to discard it.",
+                        agentState,
                         toolCalls,
-                        iterations: 0,
-                        state: agentState,
-                    };
+                    );
+
                 }
             }
         }
@@ -231,9 +222,7 @@ export class SupportAgent {
                             result,
                         });
                     } catch (error) {
-                        if (error instanceof ApplicationError ||
-                            error instanceof DomainError
-                        ) {
+                        if (isExpectedError(error)) {
                             toolResults.push({
                                 type: "tool_result",
                                 tool_use_id: toolUse.id,
@@ -253,11 +242,11 @@ export class SupportAgent {
                                     message: error.message
                                 }
                             });
-                        } else {
-                            console.error(error);
-                            throw new Error("Unexpected tool execution failure");
-                        }
 
+                            continue;
+                        }
+                        console.error(error);
+                        throw new Error("Unexpected tool execution failure", { cause: error });
                     }
                 }
 

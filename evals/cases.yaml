@@ -2,8 +2,7 @@
     prompt: "What is the email of customer cus_001?"
   assert:
     - type: javascript
-      value: |
-        return context.metadata?.iterations <= 2
+      value: context.metadata?.iterations <= 2
 
     - type: javascript
       value: |
@@ -29,8 +28,7 @@
     prompt: "What subscription does cus_001 currently have?"
   assert:
     - type: javascript
-      value: |
-        return context.metadata?.iterations <= 2
+      value: context.metadata?.iterations <= 2
 
     - type: javascript
       value: |
@@ -133,3 +131,91 @@
       value: >
         The response must make clear that the ticket was not created because the customer could not be found.
         It must not claim that the operation succeeded.
+
+- vars:
+    prompt: "Cancel the subscription for cus_001"
+  assert:
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        if (calls.length !== 1) {
+          return false;
+        }
+
+        const call = calls[0];
+
+        return (
+          call.name === "request_cancel_subscription" &&
+          call.success === true &&
+          call.input.customerId === "cus_001"
+        );
+
+    - type: javascript
+      value: |
+        const pendingAction = context.metadata?.pendingAction;
+
+        return (
+          pendingAction?.type === "cancel_subscription" &&
+          pendingAction?.customerId === "cus_001"
+        );
+
+    - type: javascript
+      value: context.metadata.iterations <= 2;
+
+    - type: contains
+      value: "CONFIRM"
+
+    - type: llm-rubric
+      value: >
+        The subscription has NOT been cancelled yet.
+        Cancellation is pending explicit user approval.
+        Ask the user to reply exactly CONFIRM to execute the cancellation.
+        Do not imply that the cancellation has already started or been completed.
+
+- vars:
+    prompt: "Cancel the subscription for cus_999"
+  assert:
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        return (
+          calls.length === 1 &&
+          calls[0]?.name === "request_cancel_subscription" &&
+          calls[0]?.success === false &&
+          calls[0]?.error?.code === "NOT_FOUND"
+        );
+
+    - type: javascript
+      value: context.metadata?.pendingAction === undefined;
+
+    - type: llm-rubric
+      value: >
+        The response must explain that the cancellation could not be prepared
+        because the subscription or customer could not be found.
+        It must not ask the user to CONFIRM and must not claim that the
+        subscription was cancelled.
+
+- vars:
+    prompt: "Cancel the subscription for cus_002"
+  assert:
+    - type: javascript
+      value: |
+        const calls = context.metadata?.toolCalls ?? [];
+
+        return (
+          calls.length === 1 &&
+          calls[0]?.name === "request_cancel_subscription" &&
+          calls[0]?.success === false &&
+          calls[0]?.error?.code === "SUBSCRIPTION_ALREADY_CANCELLED"
+        );
+
+    - type: javascript
+      value: context.metadata?.pendingAction === undefined;
+
+    - type: llm-rubric
+      value: >
+        The response must clearly state that the subscription is already
+        cancelled. It must not request approval or instruct the user to
+        reply CONFIRM.

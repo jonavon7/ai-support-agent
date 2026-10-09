@@ -1,0 +1,1588 @@
+{
+  "evalId": "eval-smz-2026-10-09T15:42:52",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-10-09T15:42:52.474Z",
+    "prompts": [
+      {
+        "id": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "raw": "{{prompt}}",
+        "label": "{{prompt}}",
+        "provider": "support-agent",
+        "metrics": {
+          "score": 8,
+          "testPassCount": 8,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 20,
+          "assertFailCount": 0,
+          "totalLatencyMs": 16441,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 8,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 5,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {},
+          "namedScoresCount": {},
+          "namedScoreWeights": {},
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "context.metadata?.iterations <= 2"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"get_customer\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nconst email = call.result.email;\n\nreturn (\n  calls.length === 1 &&\n  call.success &&\n  output.toLowerCase().includes(String(email).toLowerCase())\n);\n"
+              }
+            }
+          ]
+        },
+        "id": "86c92b58-3a10-4ad2-8231-c51b15132cd4",
+        "latencyMs": 1567,
+        "namedScores": {},
+        "prompt": {
+          "raw": "What is the email of customer cus_001?",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "The email of customer cus_001 is **alice@example.com**.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "get_customer",
+                "input": {
+                  "customerId": "cus_001"
+                },
+                "success": true,
+                "result": {
+                  "id": "cus_001",
+                  "name": "Alice Martin",
+                  "email": "alice@example.com"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "What is the email of customer cus_001?"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "context.metadata?.iterations <= 2"
+            },
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"get_customer\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nconst email = call.result.email;\n\nreturn (\n  calls.length === 1 &&\n  call.success &&\n  output.toLowerCase().includes(String(email).toLowerCase())\n);\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "What is the email of customer cus_001?"
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "get_customer",
+              "input": {
+                "customerId": "cus_001"
+              },
+              "success": true,
+              "result": {
+                "id": "cus_001",
+                "name": "Alice Martin",
+                "email": "alice@example.com"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "context.metadata?.iterations <= 2"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"get_subscription\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nconst plan = call.result.plan;\nconst status = call.result.status;\n\nreturn (\n  calls.length === 1 &&\n  call.success &&\n  output.toLowerCase().includes(String(plan).toLowerCase()) &&\n  output.toLowerCase().includes(String(status).toLowerCase())\n);\n"
+              }
+            }
+          ]
+        },
+        "id": "e9e072be-720e-4ae0-b4d7-18660f46d99a",
+        "latencyMs": 1595,
+        "namedScores": {},
+        "prompt": {
+          "raw": "What subscription does cus_001 currently have?",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "Customer cus_001 currently has a **Pro plan** subscription that is **active**.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "get_subscription",
+                "input": {
+                  "customerId": "cus_001"
+                },
+                "success": true,
+                "result": {
+                  "customerId": "cus_001",
+                  "plan": "pro",
+                  "status": "active"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "What subscription does cus_001 currently have?"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "context.metadata?.iterations <= 2"
+            },
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"get_subscription\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nconst plan = call.result.plan;\nconst status = call.result.status;\n\nreturn (\n  calls.length === 1 &&\n  call.success &&\n  output.toLowerCase().includes(String(plan).toLowerCase()) &&\n  output.toLowerCase().includes(String(status).toLowerCase())\n);\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "What subscription does cus_001 currently have?"
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "get_subscription",
+              "input": {
+                "customerId": "cus_001"
+              },
+              "success": true,
+              "result": {
+                "customerId": "cus_001",
+                "plan": "pro",
+                "status": "active"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst customerCall = calls.find(\n  (call) => call.name === \"get_customer\"\n);\nconst subscriptionCall = calls.find(\n  (call) => call.name === \"get_subscription\"\n);\n\nif (calls.length !== 2 || !customerCall?.success || !subscriptionCall?.success || !customerCall.result || !subscriptionCall.result) {\n  return false;\n}\n\nconst { name, email } = customerCall.result;\nconst { plan, status } = subscriptionCall.result;\n\nconst normalizedOutput = output.toLowerCase();\n\nreturn (\n  normalizedOutput.includes(String(name).toLowerCase()) &&\n  normalizedOutput.includes(String(email).toLowerCase()) &&\n  normalizedOutput.includes(String(plan).toLowerCase()) &&\n  normalizedOutput.includes(String(status).toLowerCase())\n);     \n"
+              }
+            }
+          ]
+        },
+        "id": "2044bfa4-94dc-431c-8de9-c62b59d1932f",
+        "latencyMs": 2113,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Who is cus_001 and what subscription do they have?",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "**Customer Information:**\n- **Name:** Alice Martin\n- **Customer ID:** cus_001\n- **Email:** alice@example.com\n\n**Subscription Details:**\n- **Plan:** Pro\n- **Status:** Active\n\nAlice Martin has an active Pro subscription.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "get_customer",
+                "input": {
+                  "customerId": "cus_001"
+                },
+                "success": true,
+                "result": {
+                  "id": "cus_001",
+                  "name": "Alice Martin",
+                  "email": "alice@example.com"
+                }
+              },
+              {
+                "name": "get_subscription",
+                "input": {
+                  "customerId": "cus_001"
+                },
+                "success": true,
+                "result": {
+                  "customerId": "cus_001",
+                  "plan": "pro",
+                  "status": "active"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "Who is cus_001 and what subscription do they have?"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst customerCall = calls.find(\n  (call) => call.name === \"get_customer\"\n);\nconst subscriptionCall = calls.find(\n  (call) => call.name === \"get_subscription\"\n);\n\nif (calls.length !== 2 || !customerCall?.success || !subscriptionCall?.success || !customerCall.result || !subscriptionCall.result) {\n  return false;\n}\n\nconst { name, email } = customerCall.result;\nconst { plan, status } = subscriptionCall.result;\n\nconst normalizedOutput = output.toLowerCase();\n\nreturn (\n  normalizedOutput.includes(String(name).toLowerCase()) &&\n  normalizedOutput.includes(String(email).toLowerCase()) &&\n  normalizedOutput.includes(String(plan).toLowerCase()) &&\n  normalizedOutput.includes(String(status).toLowerCase())\n);     \n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "Who is cus_001 and what subscription do they have?"
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "get_customer",
+              "input": {
+                "customerId": "cus_001"
+              },
+              "success": true,
+              "result": {
+                "id": "cus_001",
+                "name": "Alice Martin",
+                "email": "alice@example.com"
+              }
+            },
+            {
+              "name": "get_subscription",
+              "input": {
+                "customerId": "cus_001"
+              },
+              "success": true,
+              "result": {
+                "customerId": "cus_001",
+                "plan": "pro",
+                "status": "active"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"create_support_ticket\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nreturn (\n  calls.length === 1 &&\n  call.input.customerId === \"cus_001\" &&\n  call.result.customerId === \"cus_001\" &&\n  call.result.status === \"open\" &&\n  typeof call.result.id === \"string\"\n);\n"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The response must clearly confirm that the support ticket was successfully created for customer cus_001.\n"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The response explicitly states 'I've successfully created a support ticket for customer cus_001' and provides confirming details like Ticket ID, Customer ID, Reason, Status, and Created timestamp, clearly confirming the successful creation of the support ticket.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nPerfect! I've successfully created a support ticket for customer cus_001. Here are the details:\\n\\n- **Ticket ID**: e437febd-65e7-4156-ae70-ecf098f2ad88\\n- **Customer ID**: cus_001\\n- **Reason**: Customer was charged twice\\n- **Status**: Open\\n- **Created**: 2026-10-09 at 15:42:53 UTC\\n\\nThe support ticket has been opened and is now in the queue for the support team to review and resolve the double charge issue.\\n</Output>\\n<Rubric>\\nThe response must clearly confirm that the support ticket was successfully created for customer cus_001.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "85daf4da-fda0-4c99-8fb9-d747c067b35e",
+        "latencyMs": 2607,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Create a support ticket for customer cus_001 because they were charged twice.",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "Perfect! I've successfully created a support ticket for customer cus_001. Here are the details:\n\n- **Ticket ID**: e437febd-65e7-4156-ae70-ecf098f2ad88\n- **Customer ID**: cus_001\n- **Reason**: Customer was charged twice\n- **Status**: Open\n- **Created**: 2026-10-09 at 15:42:53 UTC\n\nThe support ticket has been opened and is now in the queue for the support team to review and resolve the double charge issue.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "create_support_ticket",
+                "input": {
+                  "customerId": "cus_001",
+                  "reason": "Customer was charged twice"
+                },
+                "success": true,
+                "result": {
+                  "id": "e437febd-65e7-4156-ae70-ecf098f2ad88",
+                  "customerId": "cus_001",
+                  "reason": "Customer was charged twice",
+                  "status": "open",
+                  "createdAt": "2026-10-09T15:42:53.553Z"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "Create a support ticket for customer cus_001 because they were charged twice."
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"create_support_ticket\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nreturn (\n  calls.length === 1 &&\n  call.input.customerId === \"cus_001\" &&\n  call.result.customerId === \"cus_001\" &&\n  call.result.status === \"open\" &&\n  typeof call.result.id === \"string\"\n);\n"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The response must clearly confirm that the support ticket was successfully created for customer cus_001.\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "Create a support ticket for customer cus_001 because they were charged twice."
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "create_support_ticket",
+              "input": {
+                "customerId": "cus_001",
+                "reason": "Customer was charged twice"
+              },
+              "success": true,
+              "result": {
+                "id": "e437febd-65e7-4156-ae70-ecf098f2ad88",
+                "customerId": "cus_001",
+                "reason": "Customer was charged twice",
+                "status": "open",
+                "createdAt": "2026-10-09T15:42:53.553Z"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"create_support_ticket\"\n);\n\nreturn (\n  calls.length === 1 &&\n  call?.success === false &&\n  call?.error?.code === \"NOT_FOUND\"\n);\n"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The response must make clear that the ticket was not created because the customer could not be found. It must not claim that the operation succeeded.\n"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The response explicitly states the ticket could not be created because the customer ID 'cus_999' was not found, and asks the user to verify and provide the correct ID. It does not claim success at any point, satisfying the rubric.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nI'm unable to create a support ticket because customer `cus_999` was not found in the system. Please verify the customer ID and try again. \\n\\nCould you double-check the customer ID? Once you provide the correct customer ID, I'll be able to create the support ticket for the double charge issue right away.\\n</Output>\\n<Rubric>\\nThe response must make clear that the ticket was not created because the customer could not be found. It must not claim that the operation succeeded.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "8a7e2fbe-fffb-4b66-bd66-1334b917b1b4",
+        "latencyMs": 2221,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Create a support ticket for customer cus_999 because they were charged twice.",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "I'm unable to create a support ticket because customer `cus_999` was not found in the system. Please verify the customer ID and try again. \n\nCould you double-check the customer ID? Once you provide the correct customer ID, I'll be able to create the support ticket for the double charge issue right away.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "create_support_ticket",
+                "input": {
+                  "customerId": "cus_999",
+                  "reason": "Customer was charged twice"
+                },
+                "success": false,
+                "error": {
+                  "code": "NOT_FOUND",
+                  "message": "Customer not found: cus_999"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "Create a support ticket for customer cus_999 because they were charged twice."
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"create_support_ticket\"\n);\n\nreturn (\n  calls.length === 1 &&\n  call?.success === false &&\n  call?.error?.code === \"NOT_FOUND\"\n);\n"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The response must make clear that the ticket was not created because the customer could not be found. It must not claim that the operation succeeded.\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "Create a support ticket for customer cus_999 because they were charged twice."
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "create_support_ticket",
+              "input": {
+                "customerId": "cus_999",
+                "reason": "Customer was charged twice"
+              },
+              "success": false,
+              "error": {
+                "code": "NOT_FOUND",
+                "message": "Customer not found: cus_999"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nif (calls.length !== 1) {\n  return false;\n}\n\nconst call = calls[0];\n\nreturn (\n  call.name === \"request_cancel_subscription\" &&\n  call.success === true &&\n  call.input.customerId === \"cus_001\"\n);\n"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const pendingAction = context.metadata?.pendingAction;\n\nreturn (\n  pendingAction?.type === \"cancel_subscription\" &&\n  pendingAction?.customerId === \"cus_001\"\n);\n"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "context.metadata.iterations <= 2;"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "contains",
+                "value": "CONFIRM"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The subscription has NOT been cancelled yet. Cancellation is pending explicit user approval. Ask the user to reply exactly CONFIRM to execute the cancellation. Do not imply that the cancellation has already started or been completed.\n"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The output clearly states the subscription has NOT been cancelled yet, explains it's pending explicit approval, and asks the user to reply exactly 'CONFIRM' to proceed. It does not imply cancellation has started or completed, fully matching the rubric.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nThe cancellation request is now pending explicit approval. **The subscription has NOT been cancelled yet.**\\n\\nTo proceed with cancelling the subscription for cus_001, please reply with exactly:\\n\\n**CONFIRM**\\n</Output>\\n<Rubric>\\nThe subscription has NOT been cancelled yet. Cancellation is pending explicit user approval. Ask the user to reply exactly CONFIRM to execute the cancellation. Do not imply that the cancellation has already started or been completed.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "a8954a6e-db8a-4198-8eea-a1b30894234e",
+        "latencyMs": 2157,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Cancel the subscription for cus_001",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "The cancellation request is now pending explicit approval. **The subscription has NOT been cancelled yet.**\n\nTo proceed with cancelling the subscription for cus_001, please reply with exactly:\n\n**CONFIRM**",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "request_cancel_subscription",
+                "input": {
+                  "customerId": "cus_001"
+                },
+                "success": true,
+                "result": {
+                  "requiresApproval": true,
+                  "action": {
+                    "type": "cancel_subscription",
+                    "customerId": "cus_001"
+                  }
+                }
+              }
+            ],
+            "iterations": 2,
+            "pendingAction": {
+              "type": "cancel_subscription",
+              "customerId": "cus_001"
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "Cancel the subscription for cus_001"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nif (calls.length !== 1) {\n  return false;\n}\n\nconst call = calls[0];\n\nreturn (\n  call.name === \"request_cancel_subscription\" &&\n  call.success === true &&\n  call.input.customerId === \"cus_001\"\n);\n"
+            },
+            {
+              "type": "javascript",
+              "value": "const pendingAction = context.metadata?.pendingAction;\n\nreturn (\n  pendingAction?.type === \"cancel_subscription\" &&\n  pendingAction?.customerId === \"cus_001\"\n);\n"
+            },
+            {
+              "type": "javascript",
+              "value": "context.metadata.iterations <= 2;"
+            },
+            {
+              "type": "contains",
+              "value": "CONFIRM"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The subscription has NOT been cancelled yet. Cancellation is pending explicit user approval. Ask the user to reply exactly CONFIRM to execute the cancellation. Do not imply that the cancellation has already started or been completed.\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 5,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "Cancel the subscription for cus_001"
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "request_cancel_subscription",
+              "input": {
+                "customerId": "cus_001"
+              },
+              "success": true,
+              "result": {
+                "requiresApproval": true,
+                "action": {
+                  "type": "cancel_subscription",
+                  "customerId": "cus_001"
+                }
+              }
+            }
+          ],
+          "iterations": 2,
+          "pendingAction": {
+            "type": "cancel_subscription",
+            "customerId": "cus_001"
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nreturn (\n  calls.length === 1 &&\n  calls[0]?.name === \"request_cancel_subscription\" &&\n  calls[0]?.success === false &&\n  calls[0]?.error?.code === \"NOT_FOUND\"\n);\n"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "context.metadata?.pendingAction === undefined;"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The response must explain that the cancellation could not be prepared because the subscription or customer could not be found. It must not ask the user to CONFIRM and must not claim that the subscription was cancelled.\n"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The response explains that no subscription was found for the customer ID, suggesting the customer ID may be incorrect or the customer lacks an active subscription. It does not ask the user to CONFIRM a cancellation, and it does not claim that any subscription was cancelled. It appropriately offers to look up customer details to verify, which aligns with the rubric's requirements.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nI wasn't able to find a subscription for customer cus_999. This could mean:\\n\\n1. The customer ID might be incorrect or doesn't exist\\n2. The customer doesn't currently have an active subscription\\n\\nCould you please verify the customer ID? If you'd like, I can look up the customer details to confirm they exist and check their subscription status.\\n</Output>\\n<Rubric>\\nThe response must explain that the cancellation could not be prepared because the subscription or customer could not be found. It must not ask the user to CONFIRM and must not claim that the subscription was cancelled.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "d7048d18-5449-4baf-9b12-3150e17c8cc8",
+        "latencyMs": 2194,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Cancel the subscription for cus_999",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "I wasn't able to find a subscription for customer cus_999. This could mean:\n\n1. The customer ID might be incorrect or doesn't exist\n2. The customer doesn't currently have an active subscription\n\nCould you please verify the customer ID? If you'd like, I can look up the customer details to confirm they exist and check their subscription status.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "request_cancel_subscription",
+                "input": {
+                  "customerId": "cus_999"
+                },
+                "success": false,
+                "error": {
+                  "code": "NOT_FOUND",
+                  "message": "Subscription not found for customer: cus_999"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "Cancel the subscription for cus_999"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nreturn (\n  calls.length === 1 &&\n  calls[0]?.name === \"request_cancel_subscription\" &&\n  calls[0]?.success === false &&\n  calls[0]?.error?.code === \"NOT_FOUND\"\n);\n"
+            },
+            {
+              "type": "javascript",
+              "value": "context.metadata?.pendingAction === undefined;"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The response must explain that the cancellation could not be prepared because the subscription or customer could not be found. It must not ask the user to CONFIRM and must not claim that the subscription was cancelled.\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 6,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "Cancel the subscription for cus_999"
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "request_cancel_subscription",
+              "input": {
+                "customerId": "cus_999"
+              },
+              "success": false,
+              "error": {
+                "code": "NOT_FOUND",
+                "message": "Subscription not found for customer: cus_999"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "const calls = context.metadata?.toolCalls ?? [];\n\nreturn (\n  calls.length === 1 &&\n  calls[0]?.name === \"request_cancel_subscription\" &&\n  calls[0]?.success === false &&\n  calls[0]?.error?.code === \"SUBSCRIPTION_ALREADY_CANCELLED\"\n);\n"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "javascript",
+                "value": "context.metadata?.pendingAction === undefined;"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The response must clearly state that the subscription is already cancelled. It must not request approval or instruct the user to reply CONFIRM.\n"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The response clearly states the subscription is already cancelled and does not request approval or ask the user to reply CONFIRM.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nIt appears that the subscription for customer cus_002 is already cancelled. There is no active subscription to cancel for this customer.\\n</Output>\\n<Rubric>\\nThe response must clearly state that the subscription is already cancelled. It must not request approval or instruct the user to reply CONFIRM.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "3acbe267-c6fd-45d5-a125-689d5d60eec7",
+        "latencyMs": 1987,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Cancel the subscription for cus_002",
+          "label": "{{prompt}}",
+          "config": {}
+        },
+        "promptId": "effa18501e44aafd9bc42a2f64ffc9b6350f94025520ca2ed382f9bdc4b6e982",
+        "promptIdx": 0,
+        "provider": {
+          "id": "support-agent",
+          "label": ""
+        },
+        "response": {
+          "output": "It appears that the subscription for customer cus_002 is already cancelled. There is no active subscription to cancel for this customer.",
+          "metadata": {
+            "toolCalls": [
+              {
+                "name": "request_cancel_subscription",
+                "input": {
+                  "customerId": "cus_002"
+                },
+                "success": false,
+                "error": {
+                  "code": "SUBSCRIPTION_ALREADY_CANCELLED",
+                  "message": "Subscription is already cancelled"
+                }
+              }
+            ],
+            "iterations": 2
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "prompt": "Cancel the subscription for cus_002"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "const calls = context.metadata?.toolCalls ?? [];\n\nreturn (\n  calls.length === 1 &&\n  calls[0]?.name === \"request_cancel_subscription\" &&\n  calls[0]?.success === false &&\n  calls[0]?.error?.code === \"SUBSCRIPTION_ALREADY_CANCELLED\"\n);\n"
+            },
+            {
+              "type": "javascript",
+              "value": "context.metadata?.pendingAction === undefined;"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The response must clearly state that the subscription is already cancelled. It must not request approval or instruct the user to reply CONFIRM.\n"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 7,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "prompt": "Cancel the subscription for cus_002"
+        },
+        "metadata": {
+          "toolCalls": [
+            {
+              "name": "request_cancel_subscription",
+              "input": {
+                "customerId": "cus_002"
+              },
+              "success": false,
+              "error": {
+                "code": "SUBSCRIPTION_ALREADY_CANCELLED",
+                "message": "Subscription is already cancelled"
+              }
+            }
+          ],
+          "iterations": 2,
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 8,
+      "failures": 0,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 0,
+        "total": 0,
+        "numRequests": 8,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 5,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 8153,
+      "evaluationDurationMs": 8153
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "AI Support Agent evals",
+    "prompts": [
+      "{{prompt}}"
+    ],
+    "providers": [
+      "file://provider.ts"
+    ],
+    "tests": [
+      {
+        "vars": {
+          "prompt": "What is the email of customer cus_001?"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "context.metadata?.iterations <= 2"
+          },
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"get_customer\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nconst email = call.result.email;\n\nreturn (\n  calls.length === 1 &&\n  call.success &&\n  output.toLowerCase().includes(String(email).toLowerCase())\n);\n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "What subscription does cus_001 currently have?"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "context.metadata?.iterations <= 2"
+          },
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"get_subscription\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nconst plan = call.result.plan;\nconst status = call.result.status;\n\nreturn (\n  calls.length === 1 &&\n  call.success &&\n  output.toLowerCase().includes(String(plan).toLowerCase()) &&\n  output.toLowerCase().includes(String(status).toLowerCase())\n);\n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "Who is cus_001 and what subscription do they have?"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst customerCall = calls.find(\n  (call) => call.name === \"get_customer\"\n);\nconst subscriptionCall = calls.find(\n  (call) => call.name === \"get_subscription\"\n);\n\nif (calls.length !== 2 || !customerCall?.success || !subscriptionCall?.success || !customerCall.result || !subscriptionCall.result) {\n  return false;\n}\n\nconst { name, email } = customerCall.result;\nconst { plan, status } = subscriptionCall.result;\n\nconst normalizedOutput = output.toLowerCase();\n\nreturn (\n  normalizedOutput.includes(String(name).toLowerCase()) &&\n  normalizedOutput.includes(String(email).toLowerCase()) &&\n  normalizedOutput.includes(String(plan).toLowerCase()) &&\n  normalizedOutput.includes(String(status).toLowerCase())\n);     \n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "Create a support ticket for customer cus_001 because they were charged twice."
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"create_support_ticket\"\n);\n\nif (!call || !call.success || !call.result) {\n  return false;\n}\n\nreturn (\n  calls.length === 1 &&\n  call.input.customerId === \"cus_001\" &&\n  call.result.customerId === \"cus_001\" &&\n  call.result.status === \"open\" &&\n  typeof call.result.id === \"string\"\n);\n"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The response must clearly confirm that the support ticket was successfully created for customer cus_001.\n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "Create a support ticket for customer cus_999 because they were charged twice."
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nconst call = calls.find(\n  (call) => call.name === \"create_support_ticket\"\n);\n\nreturn (\n  calls.length === 1 &&\n  call?.success === false &&\n  call?.error?.code === \"NOT_FOUND\"\n);\n"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The response must make clear that the ticket was not created because the customer could not be found. It must not claim that the operation succeeded.\n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "Cancel the subscription for cus_001"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nif (calls.length !== 1) {\n  return false;\n}\n\nconst call = calls[0];\n\nreturn (\n  call.name === \"request_cancel_subscription\" &&\n  call.success === true &&\n  call.input.customerId === \"cus_001\"\n);\n"
+          },
+          {
+            "type": "javascript",
+            "value": "const pendingAction = context.metadata?.pendingAction;\n\nreturn (\n  pendingAction?.type === \"cancel_subscription\" &&\n  pendingAction?.customerId === \"cus_001\"\n);\n"
+          },
+          {
+            "type": "javascript",
+            "value": "context.metadata.iterations <= 2;"
+          },
+          {
+            "type": "contains",
+            "value": "CONFIRM"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The subscription has NOT been cancelled yet. Cancellation is pending explicit user approval. Ask the user to reply exactly CONFIRM to execute the cancellation. Do not imply that the cancellation has already started or been completed.\n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "Cancel the subscription for cus_999"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nreturn (\n  calls.length === 1 &&\n  calls[0]?.name === \"request_cancel_subscription\" &&\n  calls[0]?.success === false &&\n  calls[0]?.error?.code === \"NOT_FOUND\"\n);\n"
+          },
+          {
+            "type": "javascript",
+            "value": "context.metadata?.pendingAction === undefined;"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The response must explain that the cancellation could not be prepared because the subscription or customer could not be found. It must not ask the user to CONFIRM and must not claim that the subscription was cancelled.\n"
+          }
+        ]
+      },
+      {
+        "vars": {
+          "prompt": "Cancel the subscription for cus_002"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "const calls = context.metadata?.toolCalls ?? [];\n\nreturn (\n  calls.length === 1 &&\n  calls[0]?.name === \"request_cancel_subscription\" &&\n  calls[0]?.success === false &&\n  calls[0]?.error?.code === \"SUBSCRIPTION_ALREADY_CANCELLED\"\n);\n"
+          },
+          {
+            "type": "javascript",
+            "value": "context.metadata?.pendingAction === undefined;"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The response must clearly state that the subscription is already cancelled. It must not request approval or instruct the user to reply CONFIRM.\n"
+          }
+        ]
+      }
+    ],
+    "env": {},
+    "outputPath": [
+      "results.json"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {},
+    "basePath": "/Users/jonavon/Documents/Projects/ai-support-agent/evals"
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.124.0",
+    "nodeVersion": "v24.21.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "exportedAt": "2026-10-09T15:43:00.697Z",
+    "evaluationCreatedAt": "2026-10-09T15:42:52.474Z"
+  },
+  "vars": [
+    "prompt"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "showProgressBar": true,
+    "repeat": 1,
+    "maxConcurrency": 4,
+    "cache": false
+  }
+}

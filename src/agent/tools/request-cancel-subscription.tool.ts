@@ -1,4 +1,5 @@
 import type Anthropic from "@anthropic-ai/sdk";
+import type { PrepareSubscriptionCancellation } from "../../application/prepare-subscription-cancellation.js";
 
 type RequestCancelSubscriptionToolInput = {
     customerId: string;
@@ -14,7 +15,15 @@ export type RequestCancelSubscriptionResult = {
 
 export const requestCancelSubscriptionToolDefinition: Anthropic.Tool = {
     name: "request_cancel_subscription",
-    description: "Request cancellation of a customer's subscription. This does not execute the cancellation. It creates a pending action that requires explicit user approval. After using this tool, tell the user to reply exactly CONFIRM to execute the cancellation.",
+    description:
+        `Prepare a subscription cancellation that requires explicit user approval.
+
+        This tool does NOT cancel the subscription and does NOT start the cancellation.
+        After this tool succeeds, clearly tell the user that the subscription has NOT been cancelled yet.
+
+        Tell the user that a cancellation is pending their explicit approval and ask them to reply exactly CONFIRM to execute it.
+
+        Do not say that the cancellation "has been requested", "has started", "is being processed", or has already been completed.`,
     input_schema: {
         type: "object",
         properties: {
@@ -39,18 +48,26 @@ function isRequestCancelSubscriptionInput(input: unknown): input is RequestCance
     );
 }
 
-export function executeRequestCancelSubscriptionTool(input: unknown): RequestCancelSubscriptionResult {
+export async function executeRequestCancelSubscriptionTool(
+    input: unknown,
+    prepareSubscriptionCancellation: PrepareSubscriptionCancellation,
+): Promise<RequestCancelSubscriptionResult> {
     if (!isRequestCancelSubscriptionInput(input)) {
         throw new Error(
             "Invalid input for request_cancel_subscription",
         );
     }
 
+    const subscription =
+        await prepareSubscriptionCancellation.execute({
+            customerId: input.customerId,
+        });
+
     return {
         requiresApproval: true,
         action: {
             type: "cancel_subscription",
-            customerId: input.customerId.trim(),
+            customerId: subscription.customerId,
         },
     };
 }

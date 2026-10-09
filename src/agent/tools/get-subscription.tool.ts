@@ -40,7 +40,17 @@ export async function executeGetSubscriptionTool(
         throw new Error("Invalid input for get_subscription");
     }
 
-    return getSubscription.execute({
+    const subscription = await getSubscription.execute({
         customerId: input.customerId,
     });
+
+    if (!subscription) {
+        return null;
+    }
+
+    return {
+        customerId: subscription.customerId,
+        plan: subscription.plan,
+        status: subscription.status,
+    };
 }

@@ -5,10 +5,6 @@ export type PendingAction =
         type: "cancel_subscription";
         customerId: string;
     }
-    | {
-        type: "refund_payment";
-        paymentId: string;
-    };
 
 export type AgentState = {
     messages: MessageParam[];

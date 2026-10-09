@@ -7,6 +7,7 @@ import { InMemoryCustomerRepository } from "../src/infrastructure/repositories/i
 import { InMemorySubscriptionRepository } from "../src/infrastructure/repositories/in-memory-subscription.repository.js";
 import { InMemorySupportTicketRepository } from "../src/infrastructure/repositories/in-memory-support-ticket.repository.js";
 import { CancelSubscription } from "../src/application/cancel-subscription.js";
+import { PrepareSubscriptionCancellation } from "../src/application/prepare-subscription-cancellation.js";
 
 export default class SupportAgentProvider implements ApiProvider {
     id(): string {
@@ -39,6 +40,9 @@ export default class SupportAgentProvider implements ApiProvider {
         const cancelSubscription = new CancelSubscription(
             subscriptionRepository
         );
+        const prepareSubscriptionCancellation = new PrepareSubscriptionCancellation(
+            subscriptionRepository
+        );
 
         const agent = new SupportAgent(
             {
@@ -46,6 +50,7 @@ export default class SupportAgentProvider implements ApiProvider {
                 getSubscription,
                 createSupportTicket,
                 cancelSubscription,
+                prepareSubscriptionCancellation,
             },
             apiKey,
         );
@@ -57,6 +62,7 @@ export default class SupportAgentProvider implements ApiProvider {
             metadata: {
                 toolCalls: result.toolCalls,
                 iterations: result.iterations,
+                pendingAction: result.state.pendingAction,
             }
         };
     }

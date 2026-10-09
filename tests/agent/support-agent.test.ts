@@ -11,6 +11,7 @@ import type { SubscriptionRepository } from "../../src/application/subscription.
 import type { SupportTicketRepository } from "../../src/application/support-ticket.repository.js";
 import { Subscription } from "../../src/domain/subscription.js";
 import { SubscriptionAlreadyCancelledError } from "../../src/domain/errors/subscription-already-cancelled.error.js";
+import { PrepareSubscriptionCancellation } from "../../src/application/prepare-subscription-cancellation.js";
 
 const { createMessage } = vi.hoisted(() => ({
     createMessage: vi.fn<() => Promise<Pick<Message, "stop_reason" | "content">>>(),
@@ -43,6 +44,7 @@ function createTestSetup() {
         getSubscription: new GetSubscription(subscriptionRepository),
         createSupportTicket: new CreateSupportTicket(customerRepository, supportTicketRepository),
         cancelSubscription,
+        prepareSubscriptionCancellation: new PrepareSubscriptionCancellation(subscriptionRepository),
     }, "fake-api-key");
 
     return { agent, subscription, subscriptionRepository, executeCancellation };
